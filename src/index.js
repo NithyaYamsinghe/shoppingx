@@ -5,6 +5,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { ShoppingProvider } from "./context/Context";
+import "antd/dist/antd.css";
 
 ReactDOM.render(
   <React.StrictMode>
