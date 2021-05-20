@@ -1,0 +1,62 @@
+.input{
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced3da;
+    border-radius: .25rem;
+    transition: border-color .15s;
+    
+
+   
+}
+
+.back{
+    background-color: #002240;
+    width: 1301px;
+    height: 850px;
+    margin-top: 0ch;
+}
+
+.lay{
+    height: 850px;
+    width: 500px;
+    margin-left: 400px;
+    align-items: center;
+    text-align: center;
+    background : #eeeff0 ;
+    margin-bottom: 50px;
+}
+
+.lay2{
+    margin-left: 700px;
+    margin-top: 0ch;
+    background : #0972db ;
+    height: 200px;
+    width: 50px;
+
+}
+
+.card{
+    height: 500px;
+    width: 50px;
+    margin-top: 2px;
+}
+
+.txt1{
+    width: 268px;
+}
+
+.txt{
+    width: 130px;
+}
+
+.text{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn{
+    width: 247px;
+}
