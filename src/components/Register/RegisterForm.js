@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FormWrap,
   FormContent,
@@ -15,13 +16,11 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [ConfirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e) => {
-    console.log(email);
-    console.log(password);
-    console.log(userType);
-    console.log(username);
     e.preventDefault();
   };
   return (
@@ -30,6 +29,36 @@ const RegisterForm = () => {
         <FormContent className="mt-5">
           <Form2 onSubmit={handleSubmit}>
             <FormH1>Sign Up</FormH1>
+            <div class="two-col">
+              <div class="col1">
+                <FormLabel2 htmlFor="for">
+                  <span style={{ display: "block", margin: "0 0 3px" }}>
+                    First Name
+                  </span>
+                  <FormInput2
+                    htmlFor="first name"
+                    required
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </FormLabel2>
+              </div>
+              <div class="col1">
+                <FormLabel2 htmlFor="for">
+                  <span style={{ display: "block", margin: "0 0 3px" }}>
+                    Last Name
+                  </span>
+                  <FormInput2
+                    htmlFor="last name"
+                    required
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </FormLabel2>
+              </div>
+            </div>
             <div class="two-col">
               <div class="col1">
                 <FormLabel2 htmlFor="for">
@@ -46,22 +75,6 @@ const RegisterForm = () => {
                 </FormLabel2>
               </div>
               <div class="col1">
-                <FormLabel2 htmlFor="for">
-                  <span style={{ display: "block", margin: "0 0 3px" }}>
-                    Username
-                  </span>
-                  <FormInput2
-                    htmlFor="username"
-                    required
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </FormLabel2>
-              </div>
-            </div>
-            <div class="two-col">
-              <div class="col1">
                 <FormLabel2 htmlFor="for">User Type</FormLabel2>
                 <FormSelect2
                   name="User Type"
@@ -73,6 +86,8 @@ const RegisterForm = () => {
                   <option value="Seller">Seller</option>
                 </FormSelect2>
               </div>
+            </div>
+            <div class="two-col">
               <div class="col1">
                 <FormLabel2 htmlFor="for">
                   <span style={{ display: "block", margin: "0 0 3px" }}>
@@ -87,9 +102,30 @@ const RegisterForm = () => {
                   />
                 </FormLabel2>
               </div>
+              <div class="col1">
+                <FormLabel2 htmlFor="for">
+                  <span style={{ display: "block", margin: "0 0 3px" }}>
+                    Confirm Password
+                  </span>
+                  <FormInput2
+                    htmlFor="confirm password"
+                    required
+                    type="password"
+                    value={ConfirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </FormLabel2>
+              </div>
             </div>
             <FormButton2 type="submit">Sign In</FormButton2>
-            <Text>Already Have an Account? Sign In</Text>
+            <Text>
+              <Link
+                to="/login"
+                style={{ textDecoration: "none", color: "#fff" }}
+              >
+                Already Have an Account? Sign In
+              </Link>
+            </Text>
           </Form2>
         </FormContent>
       </FormWrap>

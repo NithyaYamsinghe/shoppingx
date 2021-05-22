@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   FormWrap,
   FormContent,
@@ -9,30 +9,17 @@ import {
   FormButton,
   Text,
 } from "../common/FormElements";
-import { useAuth } from "./../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 
-const LoginForm = () => {
+const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
-  const { login, currentUserType } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setError("");
-      setLoading(true);
-      await login(email, password);
-      history.push("/");
-    } catch {
-      setError("Failed to log in");
-    }
-
-    setLoading(false);
   };
 
   return (
@@ -40,7 +27,7 @@ const LoginForm = () => {
       <FormWrap>
         <FormContent className="mt-5">
           <Form onSubmit={handleSubmit}>
-            <FormH1>Sign In</FormH1>
+            <FormH1>Reset Password</FormH1>
             <FormLabel htmlFor="for">Email</FormLabel>
             <FormInput
               htmlFor="email"
@@ -49,25 +36,18 @@ const LoginForm = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <FormLabel htmlFor="for">Password</FormLabel>
-            <FormInput
-              htmlFor="password"
-              required
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+
             <FormButton type="submit" disabled={loading}>
-              Sign In
+              Reset Password
             </FormButton>
             <br />
             {error && <Text style={{ color: "red" }}>{error}</Text>}
             <Text>
               <Link
-                to="/resetPassword"
+                to="/register"
                 style={{ textDecoration: "none", color: "#fff" }}
               >
-                Forgot Password?
+                Sign In
               </Link>
             </Text>
             <Text>
@@ -75,7 +55,7 @@ const LoginForm = () => {
                 to="/register"
                 style={{ textDecoration: "none", color: "#fff" }}
               >
-                Create an Account
+                Sign Up
               </Link>
             </Text>
           </Form>
@@ -85,4 +65,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;

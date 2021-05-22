@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "./../config/Firebase";
+import { getUser } from "./../services/UserService";
 
 const AuthContext = React.createContext();
 
@@ -10,6 +11,9 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [currentUserFirstName, setCurrentUserFirstName] = useState("");
+  const [currentUserLastName, setCurrentUserLastName] = useState("");
+  const [currentUserType, setCurrentUserType] = useState("");
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
@@ -35,9 +39,13 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password);
   }
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+  useEffect(async () => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setCurrentUser(user);
+      const { data } = await getUser(user.uid);
+      setCurrentUserFirstName(data.firstName);
+      setCurrentUserLastName(data.lastName);
+      setCurrentUserType(data.userType);
       setLoading(false);
     });
 
@@ -45,13 +53,16 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = {
-    currentUser,
     login,
     signup,
     logout,
     resetPassword,
     updateEmail,
     updatePassword,
+    currentUser,
+    currentUserFirstName,
+    currentUserLastName,
+    currentUserType,
   };
 
   return (

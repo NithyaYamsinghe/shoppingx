@@ -3,8 +3,11 @@ import Product from "./../components/Products/Product";
 import Title from "./../components/common/Title";
 import { ShoppingConsumer } from "./../context/Context";
 import SearchBox from "../components/common/SearchBox";
+import { useAuth } from "./../context/AuthContext";
 
 const ProductsScreen = () => {
+  const { currentUserType } = useAuth();
+  console.log(currentUserType);
   return (
     <React.Fragment>
       <div className="py-5">
