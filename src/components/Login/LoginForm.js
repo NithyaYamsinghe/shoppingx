@@ -27,7 +27,7 @@ const LoginForm = () => {
       setError("");
       setLoading(true);
       await login(email, password);
-      history.push("/");
+      history.push("/products");
     } catch {
       setError("Failed to log in");
     }

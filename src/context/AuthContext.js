@@ -42,10 +42,13 @@ export function AuthProvider({ children }) {
   useEffect(async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setCurrentUser(user);
-      const { data } = await getUser(user.uid);
-      setCurrentUserFirstName(data.firstName);
-      setCurrentUserLastName(data.lastName);
-      setCurrentUserType(data.userType);
+      if (user != null) {
+        const { data } = await getUser(user.uid);
+        setCurrentUserFirstName(data.firstName);
+        setCurrentUserLastName(data.lastName);
+        setCurrentUserType(data.userType);
+      }
+
       setLoading(false);
     });
 

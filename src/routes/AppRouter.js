@@ -14,13 +14,15 @@ import PaymentScreen from "../pages/PaymentScreen";
 import DeliverScreen from "./../pages/DeliverScreen";
 import PrivateRoute from "./../components/common/PrivateRoute";
 import ResetPasswordScreen from "./../pages/ResetPasswordScreen";
+import HomeScreen from "./../pages/HomeScreen";
 
 const AppRouter = () => {
   return (
     <React.Fragment>
       <SideNavBar />
       <Switch>
-        <Route exact path="/" component={ProductsScreen}></Route>
+        <Route exact path="/" component={HomeScreen}></Route>
+        <Route exact path="/products" component={ProductsScreen}></Route>
         <Route path="/details" component={DetailsScreen}></Route>
         <Route path="/cart" component={CartScreen}></Route>
         <Route path="/login" component={LoginScreen}></Route>
