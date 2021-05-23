@@ -14,23 +14,29 @@ import PaymentScreen from "../pages/PaymentScreen";
 import DeliverScreen from "./../pages/DeliverScreen";
 import PrivateRoute from "./../components/common/PrivateRoute";
 import ResetPasswordScreen from "./../pages/ResetPasswordScreen";
-import HomeScreen from "./../pages/HomeScreen";
+import ProductScreen from "./../pages/ProductScreen";
 
 const AppRouter = () => {
   return (
     <React.Fragment>
       <SideNavBar />
       <Switch>
-        <Route exact path="/" component={HomeScreen}></Route>
-        <Route exact path="/products" component={ProductsScreen}></Route>
-        <Route path="/details" component={DetailsScreen}></Route>
-        <Route path="/cart" component={CartScreen}></Route>
-        <Route path="/login" component={LoginScreen}></Route>
+        <Route exact path="/" component={LoginScreen}></Route>
+        <PrivateRoute
+          path="/products/:id"
+          component={ProductScreen}
+        ></PrivateRoute>
+        <PrivateRoute
+          path="/products"
+          component={ProductsScreen}
+        ></PrivateRoute>
+        <PrivateRoute path="/details" component={DetailsScreen}></PrivateRoute>
+        <PrivateRoute path="/cart" component={CartScreen}></PrivateRoute>
         <Route path="/register" component={RegisterScreen}></Route>
         <PrivateRoute path="/payment" component={PaymentScreen}></PrivateRoute>
-        <Route path="/deliver" component={DeliverScreen}></Route>
+        <PrivateRoute path="/deliver" component={DeliverScreen}></PrivateRoute>
         <Route path="/resetPassword" component={ResetPasswordScreen}></Route>
-        <Route component={Default}></Route>
+        <PrivateRoute component={Default}></PrivateRoute>
       </Switch>
       <Modal />
       <Footer />

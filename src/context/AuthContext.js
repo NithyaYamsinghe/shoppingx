@@ -43,10 +43,12 @@ export function AuthProvider({ children }) {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setCurrentUser(user);
       if (user != null) {
-        const { data } = await getUser(user.uid);
-        setCurrentUserFirstName(data.firstName);
-        setCurrentUserLastName(data.lastName);
-        setCurrentUserType(data.userType);
+        try {
+          const { data } = await getUser(user.uid);
+          setCurrentUserFirstName(data.firstName);
+          setCurrentUserLastName(data.lastName);
+          setCurrentUserType(data.userType);
+        } catch {}
       }
 
       setLoading(false);

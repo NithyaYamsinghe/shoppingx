@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   FormWrap,
   FormContent,
@@ -9,6 +9,8 @@ import {
   FormInput2,
   FormLabel2,
 } from "../common/FormElements";
+import { setDeliverInfo } from "./../../services/PaymentService";
+import { useAuth } from "./../../context/AuthContext";
 
 const DeliveryForm = () => {
   const [firstName, setFirstName] = useState("");
@@ -20,9 +22,22 @@ const DeliveryForm = () => {
   const [zipCode, setZipCode] = useState("");
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
+  const { currentUser } = useAuth();
+  const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const response = await setDeliverInfo(
+      currentUser.uid,
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      province,
+      zipCode,
+      country
+    );
+    history.push("/products");
   };
   return (
     <>
@@ -169,7 +184,8 @@ const DeliveryForm = () => {
                 <FormLabel2 htmlFor="for"></FormLabel2>
               </div>
             </div>
-            <Link to="/payment" style={{ textDecoration: "none" }}>
+            <Link to="/payment">
+              {" "}
               <FormButton2 type="submit">Continue</FormButton2>
             </Link>
           </Form2>

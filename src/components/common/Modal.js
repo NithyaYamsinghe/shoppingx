@@ -9,7 +9,7 @@ const Modal = () => {
     <ShoppingConsumer>
       {(value) => {
         const { modalOpen, closeModal } = value;
-        const { img, title, price } = value.modalProduct;
+        const { images, name, price } = value.modalProduct;
 
         if (!modalOpen) {
           return null;
@@ -23,10 +23,10 @@ const Modal = () => {
                     className="col-8 mx-auto col-md-6 col-lg-4 text-center text-capitalize p-5"
                   >
                     <h5>item added to the cart</h5>
-                    <img src={img} className="img-fluid" alt="product" />
-                    <h5>{title}</h5>
+                    <img src={images} className="img-fluid" alt="product" />
+                    <h5>{name}</h5>
                     <h5 className="text-muted">price: $ {price}</h5>
-                    <Link to="/">
+                    <Link to="/products">
                       <ButtonContainer onClick={() => closeModal()}>
                         Back to shopping
                       </ButtonContainer>

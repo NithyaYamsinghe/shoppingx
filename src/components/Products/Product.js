@@ -3,7 +3,16 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { ShoppingConsumer } from "./../../context/Context";
 
-const Product = ({ id, title, img, price, inCart }) => {
+const Product = ({
+  id,
+  name,
+  images,
+  price,
+  category,
+  description,
+  quantity,
+  inCart,
+}) => {
   return (
     <ProductWrapper className="col-9 mx-auto col-md-6 col-lg-3 my-3">
       <div className="card">
@@ -11,10 +20,10 @@ const Product = ({ id, title, img, price, inCart }) => {
           {(value) => (
             <div
               className="img-container p-5"
-              onClick={() => value.handleDetail(id)}
+              onClick={() => value.getProduct(id)}
             >
               <Link to="/details">
-                <img src={img} alt="Product" className="card-img-top" />
+                <img src={images[0]} alt="Product" className="card-img-top" />
               </Link>
               <button
                 className="cart-btn"
@@ -26,7 +35,6 @@ const Product = ({ id, title, img, price, inCart }) => {
               >
                 {inCart ? (
                   <p className="text-capitalize mb-0" disabled>
-                    {" "}
                     in cart
                   </p>
                 ) : (
@@ -38,7 +46,7 @@ const Product = ({ id, title, img, price, inCart }) => {
         </ShoppingConsumer>
         {/* Card Footer*/}
         <div className="card-footer d-flex justify-content-between">
-          <p className="align-self-center mb-0">{title}</p>
+          <p className="align-self-center mb-0">{name}</p>
           <h5 className="text-blue font-italic mb-0">
             <span className="mr-1">$</span>
             {price}

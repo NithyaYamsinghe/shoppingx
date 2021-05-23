@@ -1,39 +1,53 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Product from "./../components/Products/Product";
-import Title from "./../components/common/Title";
 import { ShoppingConsumer } from "./../context/Context";
 import SearchBox from "../components/common/SearchBox";
-import { useAuth } from "./../context/AuthContext";
 
 const ProductsScreen = () => {
-  const { currentUserType } = useAuth();
-  console.log(currentUserType);
   return (
-    <React.Fragment>
-      <div className="py-5">
-        <div className="container">
-          <SearchBox placeholder="Search" />
-          <div className="row">
-            <ShoppingConsumer>
-              {(value) => {
-                return value.products.map((product) => {
-                  return (
-                    <Product
-                      key={product.id}
-                      img={product.img}
-                      id={product.id}
-                      title={product.title}
-                      price={product.price}
-                      inCart={product.inCart}
-                    />
-                  );
-                });
-              }}
-            </ShoppingConsumer>
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
+    <ShoppingConsumer>
+      {(value) => {
+        const { sortedProducts, search, handleProductChange } = value;
+        return (
+          <React.Fragment>
+            <div className="py-5">
+              <div className="container">
+                <SearchBox
+                  placeholder="Search"
+                  handleChange={handleProductChange}
+                  search={search}
+                />
+                {sortedProducts.length === 0 ? (
+                  <center>
+                    <h5 className="text-blue mt-5 mb-0">
+                      sorry, no items matched your search
+                    </h5>
+                  </center>
+                ) : (
+                  <div className="row">
+                    {sortedProducts.map((product) => {
+                      return (
+                        <Product
+                          key={product.id}
+                          images={product.images}
+                          id={product.id}
+                          name={product.name}
+                          price={product.price}
+                          category={product.categoryId}
+                          description={product.description}
+                          quantity={product.quantity}
+                          inCart={product.inCart}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      }}
+    </ShoppingConsumer>
   );
 };
 

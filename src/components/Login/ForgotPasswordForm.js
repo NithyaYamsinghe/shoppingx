@@ -43,10 +43,7 @@ const ForgotPasswordForm = () => {
             <br />
             {error && <Text style={{ color: "red" }}>{error}</Text>}
             <Text>
-              <Link
-                to="/register"
-                style={{ textDecoration: "none", color: "#fff" }}
-              >
+              <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                 Sign In
               </Link>
             </Text>

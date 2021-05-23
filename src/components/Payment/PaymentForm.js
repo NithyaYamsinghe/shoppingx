@@ -11,25 +11,61 @@ import {
   FormLabel,
 } from "../common/FormElements";
 import MobilePaymentForm from "./MobilePaymentForm";
+import { useAuth } from "./../../context/AuthContext";
+import { cardPayment } from "./../../services/PaymentService";
+import { Alert } from "react-bootstrap";
+import { Link, useHistory } from "react-router-dom";
 
-const PaymentForm = () => {
+const PaymentForm = ({ items }) => {
   const [name, setName] = useState("");
   const [cardNo, setCardNo] = useState("");
   const [cvv, setCvv] = useState("");
-  const [date, setDate] = useState("");
+  const [country, setCountry] = useState("");
+  const [expYear, setExpYear] = useState("");
+  const [expMonth, setExpMonth] = useState("");
+  const [email, setEmail] = useState("");
   const [paymentType, setPaymentType] = useState("");
+  const { currentUser } = useAuth();
+  const [receipt, setReceipt] = useState("");
+  const [receiptSucess, setReceiptSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
-    console.log(name);
-    console.log(cardNo);
-    console.log(cvv);
-    console.log(date);
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const cart = {
+      userId: currentUser.uid,
+      items: items,
+    };
+
+    const { data } = await cardPayment(
+      name,
+      cardNo,
+      cvv,
+      expMonth,
+      expYear,
+      country,
+      email,
+      cart
+    );
+
+    setReceipt(data.cart.receipt);
+    setReceiptSuccess(true);
   };
   return (
     <>
       <FormWrap>
         <FormContent className="mt-5">
+          {receiptSucess && (
+            <Alert variant="success">
+              Payment Successful!
+              <a
+                href={receipt}
+                target="_blank"
+                style={{ textDecoration: "none" }}
+              >
+                Please Click the link to view receipt
+              </a>
+            </Alert>
+          )}
           <Form2 className="mb-2">
             <FormLabel htmlFor="for">Select Payment Method</FormLabel>
             <FormSelect
@@ -79,6 +115,36 @@ const PaymentForm = () => {
                 <div class="col1">
                   <FormLabel2 htmlFor="for">
                     <span style={{ display: "block", margin: "0 0 3px" }}>
+                      Exp Month
+                    </span>
+                    <FormInput2
+                      htmlFor="exp month"
+                      required
+                      type="number"
+                      value={expMonth}
+                      onChange={(e) => setExpMonth(e.target.value)}
+                    />
+                  </FormLabel2>
+                </div>
+                <div class="col1">
+                  <FormLabel2 htmlFor="for">
+                    <span style={{ display: "block", margin: "0 0 3px" }}>
+                      Exp Year
+                    </span>
+                    <FormInput2
+                      htmlFor="exp year"
+                      required
+                      type="number"
+                      value={expYear}
+                      onChange={(e) => setExpYear(e.target.value)}
+                    />
+                  </FormLabel2>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="col1">
+                  <FormLabel2 htmlFor="for">
+                    <span style={{ display: "block", margin: "0 0 3px" }}>
                       CVV
                     </span>
                     <FormInput2
@@ -93,17 +159,34 @@ const PaymentForm = () => {
                 <div class="col1">
                   <FormLabel2 htmlFor="for">
                     <span style={{ display: "block", margin: "0 0 3px" }}>
-                      Card Expire Date
+                      Email
                     </span>
                     <FormInput2
-                      htmlFor="expire date"
+                      htmlFor="email"
                       required
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </FormLabel2>
                 </div>
+              </div>
+              <div class="two-col">
+                <div class="col1">
+                  <FormLabel2 htmlFor="for">
+                    <span style={{ display: "block", margin: "0 0 3px" }}>
+                      Country
+                    </span>
+                    <FormInput2
+                      htmlFor="country"
+                      required
+                      type="text"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                    />
+                  </FormLabel2>
+                </div>
+                <div class="col1"></div>
               </div>
               <FormButton2 type="submit">Place Order</FormButton2>
             </Form2>

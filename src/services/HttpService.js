@@ -2,6 +2,11 @@ import axios from "axios";
 
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
+//Fixing Bi Directional Dependancies
+export function setToken(token) {
+  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+}
+
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
     error.response &&
@@ -19,4 +24,5 @@ export default {
   put: axios.put,
   delete: axios.delete,
   patch: axios.patch,
+  setToken,
 };

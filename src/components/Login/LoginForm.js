@@ -19,18 +19,23 @@ const LoginForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-  const { login, currentUserType } = useAuth();
+  const { login, currentUser } = useAuth();
+  const { success, setSuccess } = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setError("");
       setLoading(true);
+
       await login(email, password);
+
       history.push("/products");
     } catch {
       setError("Failed to log in");
     }
+    // var token = await currentUser.getIdToken();
+    // localStorage.setItem("token", token);
 
     setLoading(false);
   };
@@ -40,6 +45,8 @@ const LoginForm = () => {
       <FormWrap>
         <FormContent className="mt-5">
           <Form onSubmit={handleSubmit}>
+            {success && <Alert variant="success">Logged In Successfully</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
             <FormH1>Sign In</FormH1>
             <FormLabel htmlFor="for">Email</FormLabel>
             <FormInput
@@ -60,8 +67,6 @@ const LoginForm = () => {
             <FormButton type="submit" disabled={loading}>
               Sign In
             </FormButton>
-            <br />
-            {error && <Text style={{ color: "red" }}>{error}</Text>}
             <Text>
               <Link
                 to="/resetPassword"

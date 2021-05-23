@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   FormWrap,
   FormContent,
@@ -11,6 +11,11 @@ import {
   FormLabel2,
   FormSelect2,
 } from "../common/FormElements";
+import { Alert } from "react-bootstrap";
+
+import { useAuth } from "./../../context/AuthContext";
+import { createUser } from "./../../services/UserService";
+import { auth } from "./../../config/Firebase";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -18,16 +23,37 @@ const RegisterForm = () => {
   const [userType, setUserType] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [ConfirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signup, currentUser } = useAuth();
+  const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match");
+    }
+
+    try {
+      setError("");
+      setLoading(true);
+      const data = await signup(email, password);
+      await createUser(lastName, firstName, data.user.uid, userType);
+      history.push("/");
+    } catch {
+      setError("Failed to create an account");
+    }
+
+    setLoading(false);
   };
+
   return (
     <>
       <FormWrap>
         <FormContent className="mt-5">
           <Form2 onSubmit={handleSubmit}>
+            {error && <Alert variant="danger">{error}</Alert>}
             <FormH1>Sign Up</FormH1>
             <div class="two-col">
               <div class="col1">
@@ -82,8 +108,8 @@ const RegisterForm = () => {
                   onChange={(e) => setUserType(e.target.value)}
                 >
                   <option value=""></option>
-                  <option value="Buyer">Buyer</option>
-                  <option value="Seller">Seller</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="seller">Seller</option>
                 </FormSelect2>
               </div>
             </div>
@@ -111,18 +137,17 @@ const RegisterForm = () => {
                     htmlFor="confirm password"
                     required
                     type="password"
-                    value={ConfirmPassword}
+                    value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </FormLabel2>
               </div>
             </div>
-            <FormButton2 type="submit">Sign In</FormButton2>
+            <FormButton2 type="submit" disabled={loading}>
+              Sign In
+            </FormButton2>
             <Text>
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "#fff" }}
-              >
+              <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                 Already Have an Account? Sign In
               </Link>
             </Text>

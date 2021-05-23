@@ -1,34 +1,71 @@
 import React, { Component } from "react";
 import { detailProduct } from "./../Data";
 import { storeProducts } from "./../Data";
+import {
+  getItems,
+  getItem,
+  getCategories,
+  getItemSByCategory,
+} from "./../services/ItemService";
+import { setDeliverInfo } from "./../services/PaymentService";
 
 const ShoppingContext = React.createContext();
 class ShoppingProvider extends Component {
   state = {
     products: [],
+    sortedProducts: [],
     detailProduct: detailProduct,
     cart: [],
+    categories: [],
     modalOpen: false,
     modalProduct: detailProduct,
     cartSubTotal: 0,
     cartTax: 0,
     cartTotal: 0,
     currentUser: "",
+    items: [],
+    categorizedProducts: [],
+    search: "",
   };
 
-  componentDidMount() {
-    this.setProducts();
-  }
+  componentDidMount = async () => {
+    await this.setProducts();
+    await this.setCategories();
+    this.setState({
+      detailProduct: this.getStorageProduct(),
+      categorizedProducts: this.getStorageCategorizedProducts(),
+    });
+  };
 
-  setProducts = () => {
-    let tempProducts = [];
-    storeProducts.forEach((item) => {
-      const singleItem = { ...item };
-      tempProducts = [...tempProducts, singleItem];
-    });
-    this.setState(() => {
-      return { products: tempProducts };
-    });
+  setProducts = async () => {
+    const { data: products } = await getItems();
+    this.setState({ products, sortedProducts: products });
+  };
+
+  setCategories = async () => {
+    const { data: categories } = await getCategories();
+    this.setState({ categories });
+  };
+
+  setCategorizedProducts = async (categoryId) => {
+    const { data: categorizedProducts } = await getItemSByCategory(categoryId);
+    this.setState({ categorizedProducts });
+    localStorage.setItem(
+      "categorized product",
+      JSON.stringify(categorizedProducts)
+    );
+  };
+
+  getStorageCategorizedProducts = () => {
+    return localStorage.getItem("categorized product")
+      ? JSON.parse(localStorage.getItem("categorized product"))
+      : {};
+  };
+
+  getProduct = (id) => {
+    const product = this.state.products.find((item) => item.id === id);
+    this.setState({ detailProduct: product });
+    localStorage.setItem("product", JSON.stringify(product));
   };
 
   getItem = (id) => {
@@ -36,11 +73,10 @@ class ShoppingProvider extends Component {
     return product;
   };
 
-  handleDetail = (id) => {
-    const product = this.getItem(id);
-    this.setState(() => {
-      return { detailProduct: product };
-    });
+  getStorageProduct = () => {
+    return localStorage.getItem("product")
+      ? JSON.parse(localStorage.getItem("product"))
+      : {};
   };
 
   // Add To cart Method implementation
@@ -56,7 +92,11 @@ class ShoppingProvider extends Component {
 
     this.setState(
       () => {
-        return { product: tempProducts, cart: [...this.state.cart, product] };
+        return {
+          product: tempProducts,
+          cart: [...this.state.cart, product],
+          items: [...this.state.items, product.id],
+        };
       },
       () => {
         this.addTotals();
@@ -65,11 +105,9 @@ class ShoppingProvider extends Component {
   };
 
   // Open Modal Implemetation
-  openModal = (id) => {
-    const product = this.getItem(id);
-    this.setState(() => {
-      return { modalProduct: product, modalOpen: true };
-    });
+  openModal = async (id) => {
+    const { data: product } = await getItem(id);
+    this.setState({ modalProduct: product, modalOpen: true });
   };
 
   // Close Modal Implemetation
@@ -92,7 +130,10 @@ class ShoppingProvider extends Component {
 
     this.setState(
       () => {
-        return { cart: [...tempCart] };
+        return {
+          cart: [...tempCart],
+          items: [...this.state.items, product.id],
+        };
       },
       () => {
         this.addTotals();
@@ -179,6 +220,42 @@ class ShoppingProvider extends Component {
     });
   };
 
+  // handle products searching
+  handleProductChange = (event) => {
+    const name = event.target.name;
+
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
+    this.setState(
+      {
+        [name]: value,
+      },
+
+      this.sortProductData
+    );
+  };
+
+  sortProductData = () => {
+    const { products, search } = this.state;
+    let tempProducts = [...products];
+
+    if (search.length > 0) {
+      tempProducts = tempProducts.filter((item) => {
+        let tempSearch = search.toLowerCase();
+        let tempTitle = item.name.toLowerCase().slice(0, search.length);
+        if (tempSearch === tempTitle) {
+          return item;
+        }
+        return null;
+      });
+    }
+    this.setState({
+      sortedProducts: tempProducts,
+    });
+  };
+
   render() {
     return (
       <ShoppingContext.Provider
@@ -192,6 +269,9 @@ class ShoppingProvider extends Component {
           decrement: this.decrement,
           removeItem: this.removeItem,
           clearCart: this.clearCart,
+          getProduct: this.getProduct,
+          setCategorizedProducts: this.setCategorizedProducts,
+          handleProductChange: this.handleProductChange,
         }}
       >
         {this.props.children}
