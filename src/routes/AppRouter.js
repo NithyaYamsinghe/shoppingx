@@ -15,6 +15,7 @@ import DeliverScreen from "./../pages/DeliverScreen";
 import PrivateRoute from "./../components/common/PrivateRoute";
 import ResetPasswordScreen from "./../pages/ResetPasswordScreen";
 import ProductScreen from "./../pages/ProductScreen";
+import ProfileScreen from "../pages/ProfileScreen";
 
 const AppRouter = () => {
   return (
@@ -35,6 +36,7 @@ const AppRouter = () => {
         <Route path="/register" component={RegisterScreen}></Route>
         <PrivateRoute path="/payment" component={PaymentScreen}></PrivateRoute>
         <PrivateRoute path="/deliver" component={DeliverScreen}></PrivateRoute>
+        <PrivateRoute path="/profile" component={ProfileScreen}></PrivateRoute>
         <Route path="/resetPassword" component={ResetPasswordScreen}></Route>
         <PrivateRoute component={Default}></PrivateRoute>
       </Switch>

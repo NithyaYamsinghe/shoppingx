@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Product from "./../components/Products/Product";
 import { ShoppingConsumer } from "./../context/Context";
 import SearchBox from "../components/common/SearchBox";

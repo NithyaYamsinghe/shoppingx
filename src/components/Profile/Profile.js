@@ -13,31 +13,42 @@ import { useAuth } from "./../../context/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 
-const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Profile = () => {
+  const [password, setPassword] = useState("*********");
+  const [confirmPassword, setConfirmPassword] = useState("***********");
+  const { currentUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-  const { login, currentUser } = useAuth();
-  const { success, setSuccess } = useState(false);
+  const [email, setEmail] = useState(currentUser.email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setError("");
-      setLoading(true);
-
-      await login(email, password);
-
-      history.push("/products");
-    } catch {
-      setError("Failed to log in");
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match");
     }
-    // var token = await currentUser.getIdToken();
-    // localStorage.setItem("token", token);
 
-    setLoading(false);
+    const promises = [];
+    setLoading(true);
+    setError("");
+
+    if (email !== currentUser.email) {
+      promises.push(updateEmail(email));
+    }
+    if (password) {
+      promises.push(updatePassword(password));
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        history.push("/");
+      })
+      .catch(() => {
+        setError("Failed to update account");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -45,7 +56,6 @@ const LoginForm = () => {
       <FormWrap>
         <FormContent className="mt-5">
           <Form onSubmit={handleSubmit}>
-            {success && <Alert variant="success">Logged In Successfully</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
             <FormH1>Sign In</FormH1>
             <FormLabel htmlFor="for">Email</FormLabel>
@@ -64,25 +74,17 @@ const LoginForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <FormLabel htmlFor="for">Confirm Password</FormLabel>
+            <FormInput
+              htmlFor="confirm password"
+              required
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
             <FormButton type="submit" disabled={loading}>
-              Sign In
+              Update Profile
             </FormButton>
-            <Text>
-              <Link
-                to="/resetPassword"
-                style={{ textDecoration: "none", color: "#fff" }}
-              >
-                Forgot Password?
-              </Link>
-            </Text>
-            <Text>
-              <Link
-                to="/register"
-                style={{ textDecoration: "none", color: "#fff" }}
-              >
-                Create an Account
-              </Link>
-            </Text>
           </Form>
         </FormContent>
       </FormWrap>
@@ -90,4 +92,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Profile;

@@ -8,9 +8,7 @@ const Product = ({
   name,
   images,
   price,
-  category,
-  description,
-  quantity,
+
   inCart,
 }) => {
   return (

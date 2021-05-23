@@ -17,9 +17,22 @@ const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { resetPassword } = useAuth();
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      setMessage("");
+      setError("");
+      setLoading(true);
+      await resetPassword(email);
+      setMessage("Check your inbox for further instructions");
+    } catch {
+      setError("Failed to reset password");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -27,6 +40,8 @@ const ForgotPasswordForm = () => {
       <FormWrap>
         <FormContent className="mt-5">
           <Form onSubmit={handleSubmit}>
+            {error && <Alert variant="danger">{error}</Alert>}
+            {message && <Alert variant="success">{message}</Alert>}
             <FormH1>Reset Password</FormH1>
             <FormLabel htmlFor="for">Email</FormLabel>
             <FormInput

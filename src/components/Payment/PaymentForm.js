@@ -14,7 +14,6 @@ import MobilePaymentForm from "./MobilePaymentForm";
 import { useAuth } from "./../../context/AuthContext";
 import { cardPayment } from "./../../services/PaymentService";
 import { Alert } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
 
 const PaymentForm = ({ items }) => {
   const [name, setName] = useState("");
@@ -191,7 +190,7 @@ const PaymentForm = ({ items }) => {
               <FormButton2 type="submit">Place Order</FormButton2>
             </Form2>
           )}
-          {paymentType == "Mobile" && <MobilePaymentForm />}
+          {paymentType == "Mobile" && <MobilePaymentForm items={items} />}
         </FormContent>
       </FormWrap>
     </>

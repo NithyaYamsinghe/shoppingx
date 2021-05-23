@@ -5,6 +5,10 @@ const apiEndpoint_deliver = apiUrl + "users";
 
 const apiEndpoint_payment = apiUrl + "payments";
 
+const apiEndpoint_mobile_assign = apiUrl + "users";
+
+const apiEndpoint_mobile_payment = apiUrl + "payments/mobile";
+
 export function setDeliverInfo(
   userId,
   addressLine1,
@@ -45,5 +49,24 @@ export function cardPayment(
     country,
     email,
     cart,
+  });
+}
+
+export function mobileAssign(mobileNumber, userId) {
+  const carrierId = "353vU0iXrxSkwntQZOu2";
+  return http.post(
+    apiEndpoint_mobile_assign + "/" + userId + "/mobiles/assign",
+    {
+      carrierId,
+      mobileNumber,
+      userId,
+    }
+  );
+}
+
+export function mobilePayment(userId, items) {
+  return http.post(apiEndpoint_mobile_payment, {
+    userId,
+    items,
   });
 }

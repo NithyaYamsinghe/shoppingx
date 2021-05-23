@@ -8,18 +8,33 @@ import {
   FormInput2,
   FormLabel2,
 } from "../common/FormElements";
+import { mobilePayment, mobileAssign } from "./../../services/PaymentService";
+import { useAuth } from "./../../context/AuthContext";
+import { Alert } from "react-bootstrap";
 
-const MobilePaymentForm = () => {
+const MobilePaymentForm = ({ items }) => {
   const [name, setName] = useState("");
   const [mobileNo, setMobileNo] = useState("");
+  const { currentUser } = useAuth();
+  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      await mobileAssign(mobileNo, currentUser.uid);
+      await mobilePayment(currentUser.uid, items);
+      setSuccess(true);
+    } catch {
+      setSuccess(false);
+    }
   };
   return (
     <>
       <FormWrap>
         <FormContent className="mt-5">
+          {success && <Alert variant="success">Payment Successful!</Alert>}
+
           <Form2 onSubmit={handleSubmit}>
             <FormH1>Mobile Details</FormH1>
             <div class="two-col">

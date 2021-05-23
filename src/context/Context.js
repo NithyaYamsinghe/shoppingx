@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { detailProduct } from "./../Data";
-import { storeProducts } from "./../Data";
 import {
   getItems,
   getItem,
   getCategories,
   getItemSByCategory,
 } from "./../services/ItemService";
-import { setDeliverInfo } from "./../services/PaymentService";
 
 const ShoppingContext = React.createContext();
 class ShoppingProvider extends Component {

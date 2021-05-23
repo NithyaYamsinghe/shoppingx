@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   FormWrap,
   FormContent,
@@ -27,7 +27,7 @@ const DeliveryForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await setDeliverInfo(
+    await setDeliverInfo(
       currentUser.uid,
       addressLine1,
       addressLine2,
@@ -37,7 +37,7 @@ const DeliveryForm = () => {
       zipCode,
       country
     );
-    history.push("/products");
+    history.push("/payment");
   };
   return (
     <>
@@ -184,10 +184,8 @@ const DeliveryForm = () => {
                 <FormLabel2 htmlFor="for"></FormLabel2>
               </div>
             </div>
-            <Link to="/payment">
-              {" "}
-              <FormButton2 type="submit">Continue</FormButton2>
-            </Link>
+
+            <FormButton2 type="submit">Continue</FormButton2>
           </Form2>
         </FormContent>
       </FormWrap>

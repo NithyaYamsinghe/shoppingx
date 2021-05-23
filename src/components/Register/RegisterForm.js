@@ -15,7 +15,6 @@ import { Alert } from "react-bootstrap";
 
 import { useAuth } from "./../../context/AuthContext";
 import { createUser } from "./../../services/UserService";
-import { auth } from "./../../config/Firebase";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -26,7 +25,7 @@ const RegisterForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signup, currentUser } = useAuth();
+  const { signup } = useAuth();
   const history = useHistory();
 
   const handleSubmit = async (e) => {
